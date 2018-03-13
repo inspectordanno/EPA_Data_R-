@@ -1,0 +1,47 @@
+---
+title: "Visualization of EPA Data"
+output: html_notebook
+---
+
+Put CSV into a variable.
+```{r}
+epa <- read.csv("./18tstcar-2018-01-02.csv")
+
+epa
+```
+
+Install tidyverse.
+```{r}
+install.packages("tidyverse")
+library("tidyverse")
+```
+
+Group cars by number of cylinders. Plot the results.
+```{r}
+ cylinderPlot <- epa %>% 
+  group_by(X..of.Cylinders.and.Rotors) %>% 
+  tally() %>% 
+   ggplot(aes(x=X..of.Cylinders.and.Rotors, y=n)) + geom_bar(stat="identity", fill="steelblue") + labs(x="Number of Cylinders Per Car", y="Number of Cars", title="Cars by Number of Cylinders") 
+cylinderPlot
+```
+Group cars by police status or lack thereof. Plot the results.
+```{r}
+policePlot <- epa %>% 
+  group_by(	
+Police...Emergency.Vehicle.) %>% 
+  tally() %>% 
+   ggplot(aes(	
+Police...Emergency.Vehicle., y=n)) + geom_bar(stat="identity", fill="steelblue") + labs(x="No or Yes", y="Count", title="Is the Car a Police Emergency Vehicle?")
+policePlot
+```
+Export plots as PDF.
+```{r}
+savePlot <- function(myPlot) {
+        pdf("myPlot2.pdf")
+        print(myPlot)
+        dev.off()
+}
+
+savePlot(policePlot)
+```
+
